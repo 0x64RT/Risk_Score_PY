@@ -114,7 +114,7 @@ Responsible Use:
 This tool is intended solely to provide informational insights. Under no circumstances should the results be considered sufficient evidence of cheating. The developer is not responsible for any misuse of this information.
 Note: These analyses are intended for 95% of regular players; it is normal that when analyzing many grandmasters, or other excellent players extreme percentages appear that do not reflect typical performance.
 Note: Please keep forum discussions limited to suggestions and improvement ideas. For any technical issues or potential bugs, contact me at agostjordi@gmail.com .
-Final Note: This program has been tested by over 5 users for several weeks. Although no major bugs have been detected, there might still be minor issues present.
+
 
 Enjoy!
 With love from Spain!
