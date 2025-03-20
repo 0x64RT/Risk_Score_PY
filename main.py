@@ -26,7 +26,7 @@ from pygame.locals import *
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
 # =======================================================
-# Ajuste para que PyInstaller empaquete todos los recursos
+# Setting for PyInstaller to package all resources
 # =======================================================
 if getattr(sys, 'frozen', False):
     base_path = sys._MEIPASS
@@ -34,7 +34,7 @@ else:
     base_path = os.path.dirname(__file__)
 
 # =======================================================
-# Diccionario con las credenciales de usuario
+# Diccionario con las credenciales de usuario (inactive)
 # =======================================================
 user_credentials = {
     "admin": "admin",
@@ -190,13 +190,13 @@ def show_login():
 
 
 # =======================================================
-# SI NO HAY ARCHIVO DE LOGIN, SE EJECUTA EL LOGIN
+# IF THERE IS NO LOGIN FILE, THE LOGIN IS EXECUTED
 # =======================================================
 #show_login()
 
 
 # =======================================================
-# 2) INICIALIZACIÓN DE PYGAME Y TÉRMINOS Y CONDICIONES
+# 2) PYGAME INITIALIZATION AND TERMS AND CONDITIONS
 # =======================================================
 pygame.init()
 WIDTH, HEIGHT = int(1300 ), int(760 )
@@ -337,13 +337,13 @@ if not os.path.exists("accepted_terms.txt"):
 
 
 # =======================================================
-# 3) IMPORTAMOS MÓDULOS DE ANÁLISIS (api_chess, utils)
+# 3) WE IMPORT ANALYSIS MODULES (api_chess, utils)
 # =======================================================
 import api_chess
 import utils
 
 # =======================================================
-# 4) CONFIGURACIÓN DE FUENTES, GIF Y DEMÁS (Pygame)
+# 4) CONFIGURING FONTS, GIFS, AND MORE (Pygame)
 # =======================================================
 font = pygame.font.SysFont("Arial", 20)
 title_font = pygame.font.SysFont("Arial", 30, bold=True)
@@ -416,7 +416,7 @@ def draw_gif():
     screen.blit(gif_surface, gif_rect)
 
 # =======================================================
-# 5) VARIABLES GLOBALES Y ESTADO DE LA APP PYGAME
+# 5) GLOBAL VARIABLES AND STATE OF THE PYGAME APP
 # =======================================================
 active_input = "none"
 calendar_start_time = 0
@@ -474,7 +474,7 @@ risk_evo_username_input = ""
 risk_evo_games_input = ""
 
 # =======================================================
-# 6) FUNCIONES DE ANIMACIÓN, DIBUJO Y LÓGICA PRINCIPAL
+# 6) ANIMATION, DRAWING AND MAIN LOGIC FUNCTIONS
 # =======================================================
 def draw_chessboard_loading(center, size):
     board_width, board_height = size
@@ -919,7 +919,7 @@ def update_and_draw_particles():
 arrow_pressed = False
 
 # =======================================================
-# 7) BUCLE PRINCIPAL DE LA APLICACIÓN PYGAME
+# 7) MAIN LOOP OF THE PYGAME APP
 # =======================================================
 running = True
 while running:
