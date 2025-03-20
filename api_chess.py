@@ -215,12 +215,12 @@ def calculate_risk_score(username):
     }
 
 def calculate_weekly_risk_score(week_games, s_global):
-    # Cálculo del win rate semanal
+    # Calculation of the weekly win rate
     wins = sum(1 for g in week_games if g["result"] == "win")
     total = len(week_games)
     s_weekly = calculate_win_rate_score((wins / total) if total > 0 else 0, total)
     
-    # Cálculo de la precisión semanal
+    # Calculating weekly accuracy
     games_with_accuracy = [g for g in week_games if g.get("accuracy") is not None]
     count_accuracy = len(games_with_accuracy)
     if count_accuracy > 0:
@@ -234,28 +234,27 @@ def calculate_weekly_risk_score(week_games, s_global):
         "high_accuracy_percentage": high_acc_percentage
     })
     
-    # Combinación de los tres componentes:
+    # Combination of the three components:
     weighted_sum = 0.35 * s_weekly + 0.35 * s_global + 0.30 * accuracy_score
     final_score = min(100, weighted_sum)
     return final_score
 
 def calculate_risk_score_range(username, start_ts, end_ts):
     """
-    Calcula el Risk Score para el rango [start_ts, end_ts] utilizando la misma
-    lógica que el Risk Score global (tecla 1), pero de forma que:
-      - El win rate total se toma de todas las partidas (global),
-      - El win rate reciente y el accuracy se calculan únicamente con las partidas
-        cuyo timestamp esté entre start_ts y end_ts.
+  Calculates the Risk Score for the range [start_ts, end_ts] using the same logic as the global Risk Score (key 1), but with:
+- The total win rate is taken from all games (global),
+- The recent win rate and accuracy are calculated only for games
+whose timestamp is between start_ts and end_ts.
     """
-    # 1. Datos globales: edad de la cuenta y estadísticas completas
+    #1. Global data: account age and complete statistics
     account_age_days = get_account_age_days(username)
     stats = fetch_player_stats(username)  # Estadísticas totales por formato
 
-    # 2. Descarga de partidas recientes (la misma que usa el riesgo global)
+    # 2. Download recent games (the same one used by global risk)
     recent_games_raw = fetch_recent_games(username)
-    # Transformamos las partidas una única vez
+   # We transform the games only once
     transformed_games = [transform_game(game, username) for game in recent_games_raw]
-    # Filtramos las partidas cuyo timestamp esté en el rango y con resultado conocido
+    # We filter the games whose timestamp is in the range and with known result
     filtered_games = [tg for tg in transformed_games if tg["timestamp"] and start_ts <= tg["timestamp"] <= end_ts and tg["result"] != "unknown"]
 
     MIN_GAMES = 5
@@ -264,7 +263,7 @@ def calculate_risk_score_range(username, start_ts, end_ts):
 
     for fmt in formatos:
         if fmt in stats:
-            # 3.1 Cálculo del win rate total (global) a partir de stats
+            # 3.1 Calculating the total (global) win rate from stats
             s = stats[fmt]
             wins = s.get("wins", 0)
             losses = s.get("losses", 0)
@@ -273,7 +272,7 @@ def calculate_risk_score_range(username, start_ts, end_ts):
             overall_winrate = (wins / total_games) if total_games > 0 else 0
             overall_score = calculate_win_rate_score(overall_winrate, total_games)
 
-            # 3.2 Cálculo del win rate reciente y accuracy, usando solo partidas del rango
+            # 3.2 Calculating recent win rate and accuracy, using only range items
             fmt_name = fmt.replace("chess_", "")  # ej. "rapid", "bullet", "blitz"
             recent_games = [game for game in filtered_games if game["time_class"] == fmt_name]
             recent_total = len(recent_games)
@@ -281,7 +280,7 @@ def calculate_risk_score_range(username, start_ts, end_ts):
             recent_winrate = (recent_wins / recent_total) if recent_total > 0 else 0
             recent_score = calculate_win_rate_score(recent_winrate, recent_total) if recent_total > 0 else 0
 
-            # 3.3 Cálculo de la precisión (accuracy) solo con partidas del rango
+            # 3.3 Calculating accuracy with range items only
             rating = s.get("rating", 0)
             games_with_accuracy = [game for game in recent_games if game.get("accuracy") is not None]
             count_accuracy = len(games_with_accuracy)
@@ -297,19 +296,19 @@ def calculate_risk_score_range(username, start_ts, end_ts):
             }
             accuracy_score = calculate_high_accuracy_score(accuracy_data)
 
-            # 3.4 Combinación ponderada de los tres componentes:
-            # 35% win rate total, 35% win rate reciente y 30% accuracy
+            # 3.4 Weighted combination of the three components:
+            # 35% total win rate, 35% recent win rate, and 30% accuracy
             weighted_sum = 0.35 * overall_score + 0.35 * recent_score + 0.30 * accuracy_score
 
-            # Si en el rango hay menos de MIN_GAMES partidas para el formato, se descarta
+            # If there are fewer than MIN_GAMES games in the range for the format, it is discarded
             if recent_total < MIN_GAMES:
                 continue
 
-            # 4. Ajuste para cuentas nuevas: se multiplica por 1.5 si la cuenta tiene menos de 60 días
+            # 4. Adjustment for new accounts: Multiply by 1.5 if the account is less than 60 days old
             factor = 1.5 if (account_age_days is not None and account_age_days < 60) else 1
             final_score = min(100, factor * weighted_sum)
 
-            # Guardamos la información para este formato
+            # We save the information for this format
             format_scores.append((fmt, final_score, {
                 "overall_winrate": overall_winrate * 100,
                 "overall_score": overall_score,
@@ -508,22 +507,22 @@ def plot_precision_comparison(username, game_type="global"):
 
 def plot_risk_evolution(username, num_weeks, game_type="global"):
     """
-    Genera una gráfica que muestra la evolución semanal del Risk Score en las últimas num_weeks semanas.
-    La fórmula se ajusta para que sea exactamente igual que el risk score normal, es decir:
-      - 35% corresponde al win rate global (con el factor de cuenta nueva)
-      - 35% corresponde al win rate de la semana
-      - 30% corresponde a la precisión de la semana
+   Generates a graph showing the weekly evolution of the Risk Score over the last num_weeks.
+The formula is adjusted to be exactly the same as the normal risk score, i.e.:
+- 35% corresponds to the overall win rate (with the new account factor)
+- 35% corresponds to the win rate for the week
+- 30% corresponds to the accuracy for the week
     """
     now = time.time()
     cutoff = now - num_weeks * 7 * 24 * 3600
     games = []
-    # Partidas recientes (limitadas por el cutoff)
+    # Recent games (limited by cutoff)
     recent_games_raw = fetch_recent_games(username)
     for game in recent_games_raw:
         tg = transform_game(game, username)
         if tg["result"] != "unknown" and tg["timestamp"] and tg["timestamp"] >= cutoff:
             games.append(tg)
-    # Agregar partidas de archivos para ampliar el rango
+    # Add file items to extend the range
     archives = fetch_archives(username)
     for url in archives:
         try:
@@ -542,7 +541,7 @@ def plot_risk_evolution(username, num_weeks, game_type="global"):
     if game_type != "global":
         games = [g for g in games if g.get("time_class") == game_type]
         
-    # Calcular s_global de forma idéntica al risk score normal:
+    # Calculate s_global identically to the normal risk score:
     stats = fetch_player_stats(username)
     account_age_days = get_account_age_days(username)
     account_age_factor = 1.5 if (account_age_days is not None and account_age_days < 60) else 1
@@ -564,10 +563,10 @@ def plot_risk_evolution(username, num_weeks, game_type="global"):
         s_global = calculate_win_rate_score(overall_win_rate, total_games)
     else:
         s_global = 0
-    # Aplicar el factor de cuenta nueva para que sea exactamente igual al risk score normal
+  # Apply the new account factor so that it is exactly equal to the normal risk score
     s_global = account_age_factor * s_global
 
-    # Organizar las partidas por semana
+    # Organize the games by week
     weeks = {i: [] for i in range(num_weeks)}
     for game in games:
         timestamp = game.get("timestamp")
