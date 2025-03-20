@@ -1,23 +1,14 @@
 # Risk_Score_PY
 
-Fair-Play Analyzer User Guide (EXE for Windows 10/11) 📊
+Fair-Play Analyzer User Guide 
 1. Application Startup
-Direct Execution:
-When you run the EXE file on Windows 10 or 11, the application launches without any additional setup.
-
-Folder Structure:
-The provided package contains a folder with two files: the executable and a TXT file. It is strongly recommended not to separate them; both must always remain in the same directory for the automatic login to work properly.
-
-Login:
-A login window will appear where you must enter a username and password.
-
-Interaction: Click on the rectangle designated for the user input and type your username.
-Default Credentials: By default, the password for all users is admin (i.e., username: admin, password: admin).
-If you select “Remember username,” the program will save your details for future sessions.
+Install requierements.
+Make sure to have some recent python version compatible with pygame.
 
 2. Terms and Conditions
 Display of Terms:
 Before accessing the main features, the terms and conditions will be displayed.
+Terms wont appear if accept_terms.txt is on the same directory has main.py.
 
 Confirmation:
 Type “accept” in the designated field and press Enter to continue. This action creates a confirmation file to prevent the terms from being shown again in future sessions.
@@ -117,7 +108,7 @@ Remember, pressing the Escape key anywhere in the application will return you to
 
 7. Final Considerations
 Compatibility and Data:
-The application is designed to run on Windows 10 and Windows 11. Public data from the Chess.com API is used for the analyses, and only minimal data is stored locally.
+The application is designed to run on almost any windows, mac and linux distros. Public data from the Chess.com API is used for the analyses, and only minimal data is stored locally.
 
 Responsible Use:
 This tool is intended solely to provide informational insights. Under no circumstances should the results be considered sufficient evidence of cheating. The developer is not responsible for any misuse of this information.
@@ -126,4 +117,4 @@ Note: Please keep forum discussions limited to suggestions and improvement ideas
 Final Note: This program has been tested by over 5 users for several weeks. Although no major bugs have been detected, there might still be minor issues present.
 
 Enjoy!
-With love from Spaintongue!
+With love from Spain!
