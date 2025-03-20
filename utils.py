@@ -3,7 +3,7 @@ import math
 
 def generate_chessboard_gradient_image(width, height, rows=8, cols=8):
     """
-    Devuelve una imagen completamente negra (no se está usando en el main).
+  Returns a completely black image (not used in main).
     """
     from PIL import Image
     image = Image.new("RGB", (width, height), color=(0, 0, 0))
@@ -14,7 +14,7 @@ def calculate_weight(n):
 
 def calculate_win_rate_score(win_rate, total_games):
     weight = calculate_weight(total_games)
-    # Escala: a partir de 0.5 de win_rate empieza a sumar
+   # Scale: starting from 0.5 win_rate it starts adding
     if win_rate <= 0.5:
         score = 0
     elif win_rate > 0.7:
@@ -33,7 +33,7 @@ def calculate_high_accuracy_score(accuracy_data):
         return 0
     weight = calculate_weight(n)
     ha = accuracy_data.get("high_accuracy_percentage", 0)
-    # Escala: a partir de 10% de partidas con precisión alta empieza a sumar
+    # Scale: starting from 10% of games with high precision it starts to add up
     if ha <= 10:
         base_score = 0
     elif ha > 30:
